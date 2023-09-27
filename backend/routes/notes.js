@@ -4,11 +4,8 @@ const router = express.Router()
 
 
 router.get("/", (req, res) => {
-    obj = {
-        title:'react',
-        desc:'learning react'
-    }
-  res.json(obj);
+    
+  res.json([]);
 });
 
 module.exports = router;
