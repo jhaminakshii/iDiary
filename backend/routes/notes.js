@@ -75,4 +75,30 @@ router.put(
   }
 );
 
+//  Route 3 : Delete an existing note using : DELETE '/api/notes/deletenote/id'. Login required
+router.delete(
+  "/deletenote/:id",
+  fetchUserData,
+  async (req, res) => {
+    try {
+      const {title,description,tag} = req.body ;
+
+      //find the note to be deleted and delete it
+      let note = await Notes.findById(req.params.id) ;
+      if (!note) {
+        return res.status(404).send('Not found');
+      }
+      //Allow user to delete notes only if user own it
+      if (note.user.toString() !== req.user.id){
+        return res.status(401).send("Not allowed");
+      }
+      note = await Notes.findByIdAndDelete(req.params.id)
+      res.json({'sucess':'Note has been deleted' , note:note});
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).send("Internal server error");
+    }
+  }
+);
+
 module.exports = router;
